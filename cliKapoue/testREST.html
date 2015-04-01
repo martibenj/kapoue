@@ -1,16 +1,16 @@
 <!doctype html>
-<html ng-app>
+<html>
 	<head>
-		<title>Hello AngularJS</title>
+		<title>Gras AngularJS</title>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
-    	<script src="hello.js"></script>
+		<script src="./gras.js"></script>
 	</head>
 
 	<body>
-		<div ng-controller="Hello">
-		    <button type="button" ng-click="get()">obtenir données</button>
-			<p>The ID is {{objet.name}}</p>
-			<p>The content is {{objet.description}}</p>
+		<div ng-app ng-controller="Gras">
+		    <button type="button" ng-click="get()">Obtenir données</button>
+			<p>{{petiteKapoue.name}}</p>
+			<p>{{petiteKapoue.description}}</p>
 		</div>
 	</body>
 </html>
