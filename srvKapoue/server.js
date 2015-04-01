@@ -35,7 +35,7 @@ console.log("Binded App /kapoue");
 
 // Kapoue 2 with more attr
 app.get('/kapoue/:id', function(req, res) {
-    console.log("Calling " + req.params.id);
+    console.log("Calling with id=" + req.params.id);
     res.contentType('application/json');
     res.json(
     {
