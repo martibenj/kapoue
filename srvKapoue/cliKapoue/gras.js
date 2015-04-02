@@ -2,7 +2,7 @@ function Gras($scope, $http)
 {
 	$scope.get = function() {
 		console.log('Activation du bouton');
-		$http.get("http://localhost:3000/kapoue/truc")
+		$http.get("./kapoue/truc")
 			.success(
 			function (data) {
 				$scope.petiteKapoue = data.petiteKapoue;
@@ -16,7 +16,7 @@ function Gras($scope, $http)
 	$scope.getImg = function()
 	{
 		console.log ('recuperation de l image');
-		$http.get("http://localhost:3000/photo/kapoue")
+		$http.get("./photo/kapoue")
 			.success(
 			function(data)
 			{
