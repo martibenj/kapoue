@@ -22,7 +22,7 @@ function Gras($scope, $http)
 			{
 
 
-				$scope.imageKapoue = data;
+				$scope.images = data;
 
 			})
 			.error(

@@ -12,7 +12,11 @@
 			<p>nom : {{petiteKapoue.name}}</p>
 			<p>description : {{petiteKapoue.description}}</p>
 			<button type="button" ng-click="getImg()">Kapppppoueeeee</button>
-			<img ng-src="data:image/png;base64"{{imageKapoue}}/>
+			  <ul>
+				  <li ng-repeat="image in images">
+					 <img src="{{image.url}}" />
+				  </li>
+			  </ul>
 		</div>
 	</body>
 </html>

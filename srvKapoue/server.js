@@ -11,26 +11,24 @@ console.log("#########################################");
 app.use(function(req, res, next) {
     if (req.headers.origin) {
         console.log("Adding Access-Control-Allow-Origin");
-        res.header('Access-Control-Allow-Origin', '*')
-        res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization')
-        res.header('Access-Control-Allow-Methods', 'GET,PUT,PATCH,POST,DELETE')
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization');
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,PATCH,POST,DELETE');
     }
     next()
 });
 
 // utilisation du repertoire cliKapoue en static
-app.use(express.static(__dirname + '/cliKapoue'));
-app.get('/', function(req, res, next){
-    res.render('./index.html');
-});
+app.use("/", express.static(__dirname + '/cliKapoue'));
+// binding des objets dans img avec l'url /images/
+app.use("/images", express.static(__dirname + '/img'));
 
 // Kapoue 1 with fake objects "name"
 app.get('/kapoue', function(req, res) {
     res.contentType('application/json');
-    res.status(500);
-    res.header('Access-Control-Allow-Origin', '*')
-    res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization')
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,PATCH,POST,DELETE')
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,PATCH,POST,DELETE');
     res.json(
         [
         {"name": "wine1"},
@@ -57,8 +55,15 @@ console.log("Binded App /kapoue/:id");
 // Image de Kapoue
 app.get('/photo/:id', function(req, res)
 {
-    console.log("envoi d'une image" + req.params.id);
-    res.sendFile(__dirname + '/img/kapoue.jpg');
+    res.contentType('application/json');
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,PATCH,POST,DELETE');
+    res.json(
+        [
+            {"url": "./images/kapoue.jpg"},
+            {"url": "./images/moustache.jpg"}
+        ]);
 });
 console.log("Binded App /photo/:id");
 
