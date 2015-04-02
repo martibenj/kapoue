@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Gras AngularJS</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+		<script src="./gras.js"></script>
+	</head>
+
+	<body>
+		<div ng-app ng-controller="Gras">
+		    <button type="button" ng-click="get()">Obtenir donnees</button>
+			<p>nom : {{petiteKapoue.name}}</p>
+			<p>description : {{petiteKapoue.description}}</p>
+			<button type="button" ng-click="getImg()">Kapppppoueeeee</button>
+			<img ng-src="data:image/png;base64"{{imageKapoue}}/>
+		</div>
+	</body>
+</html>

@@ -3,28 +3,33 @@ var http = require('http');
 
 var app = express();
 
-
 console.log("#########################################");
 console.log("Starting Mega Kapoue Mustache Uber Server");
 console.log("#########################################");
 
 // Activating CORS for all
 app.use(function(req, res, next) {
+    express.static(__dirname);
     if (req.headers.origin) {
         res.header('Access-Control-Allow-Origin', '*')
         res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization')
         res.header('Access-Control-Allow-Methods', 'GET,PUT,PATCH,POST,DELETE')
     }
     next()
-})
+});
+
+// utilisation du repertoire cliKapoue en static
+app.use(express.static(__dirname + '/cliKapoue'));
+app.get('/', function(req, res, next){
+    res.render('./index.html');
+});
 
 // Kapoue 1 with fake objects "name"
 app.get('/kapoue', function(req, res) {
     res.contentType('application/json');
-    res.status(500);
-    res.header('Access-Control-Allow-Origin', '*')
-    res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization')
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,PATCH,POST,DELETE')
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,PATCH,POST,DELETE');
     res.json(
         [
         {"name": "wine1"},
@@ -48,8 +53,16 @@ app.get('/kapoue/:id', function(req, res) {
 });
 console.log("Binded App /kapoue/:id");
 
+// Image de Kapoue
+app.get('/photo/:id', function(req, res)
+{
+    console.log("envoi d'une image" + req.params.id);
+    res.sendFile(__dirname + '/img/kapoue.jpg');
+});
+console.log("Binded App /photo/:id");
+
 // Setting value for server
-var srvAddress = "localhost";
+var srvAddress = "0.0.0.0";
 var srvPort = 3000;
 
 // Creating Server
