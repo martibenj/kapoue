@@ -4,7 +4,6 @@
 		<title>Gras AngularJS</title>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
 		<script src="./gras.js"></script>
-		<script src="./upload.js"></script>
 	</head>
 
 	<body>
@@ -12,8 +11,16 @@
 		    <button type="button" ng-click="get()">Obtenir donnees</button>
 			<p>nom : {{petiteKapoue.name}}</p>
 			<p>description : {{petiteKapoue.description}}</p>
-			<button type="button" ng-click="getImg()">Kapppppoueeeee</button>
+
+			<form ng-submit="getImg()">
+				<input type="text" name="firstName" ng-model="index"> Numero du kapoueeee <br/>
+
+				<input type="submit">
+			</form>
+
+			<button type="button" ng-click="getImgs()">Plein de Kapppppoueeeee</button>
 			<li ng-repeat="image in images">
+				<p>Num : {{image.index}}</p>
 				<img ng-src="{{image.url}}" />
 			</li>
 		</div>

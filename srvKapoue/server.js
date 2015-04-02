@@ -59,7 +59,7 @@ app.get('/kapoue/:id', function(req, res) {
 });
 console.log("Binded App /photos");
 
-// Image de Kapoue
+// Images de Kapoue
 app.get('/photos', function(req, res)
 {
     // recherche des fichiers dans le repertoire img
@@ -79,8 +79,42 @@ app.get('/photos', function(req, res)
         {
             var image = {};
             image.url = "./images/" + files[i];
+            image.index = i;
             jObject.push(image);
+
         }
+        console.log('jObject');
+        console.log(jObject);
+        // construction de la reponse
+        res.contentType('application/json');
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization');
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,PATCH,POST,DELETE');
+        res.json(jObject);
+    });
+});
+console.log("Binded App /photos");
+
+
+// Images de Kapoue
+app.get('/photo/:id', function(req, res)
+{
+    // recherche des fichiers dans le repertoire img
+    var files   = [];
+    var walker  = walk.walk('./img', { followLinks: false });
+    walker.on('file', function(root, stat, next) {
+        // Add this file to the list of files
+        files.push(stat.name);
+        next();
+    });
+
+    walker.on('end', function() {
+        // fin du parcours, on créea un objet json et on retourne la reponse
+        var jObject = [];
+        var image = {};
+        image.url = "./images/" + files[req.params.id];
+        image.index = req.params.id;
+        jObject.push(image);
         // construction de la reponse
         res.contentType('application/json');
         res.header('Access-Control-Allow-Origin', '*');
@@ -91,7 +125,8 @@ app.get('/photos', function(req, res)
 });
 console.log("Binded App /photo/:id");
 
-// upload de fichier
+
+// upload de fichier par post
 app.post('/upload', function(req, res) {
           console.log("appel post");
     var fstream;

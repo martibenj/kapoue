@@ -19,3 +19,4 @@ release.properties
 dependency-reduced-pom.xml
 gen/*
 R.java
+img/*

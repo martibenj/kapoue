@@ -13,17 +13,32 @@ function Gras($scope, $http)
 			});
 	};
 
-	$scope.getImg = function()
+	// recuperation de toutes les images
+	$scope.getImgs = function()
 	{
 		console.log ('recuperation de l image');
 		$http.get("./photos")
 			.success(
 			function(data)
 			{
-
-
 				$scope.images = data;
+			})
+			.error(
+			function(data, status)
+			{
+				alert("Erreur lors de la recuperation de l'image");
+			});
+	}
 
+	// recuperation d'une image
+	$scope.getImg = function()
+	{
+		console.log ('recuperation de l image ' + $scope.index);
+		$http.get("./photo/" + $scope.index)
+			.success(
+			function(data)
+			{
+				$scope.images = data;
 			})
 			.error(
 			function(data, status)
