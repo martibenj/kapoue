@@ -4,6 +4,7 @@
 		<title>Gras AngularJS</title>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
 		<script src="./gras.js"></script>
+		<script src="./upload.js"></script>
 	</head>
 
 	<body>
@@ -12,11 +13,19 @@
 			<p>nom : {{petiteKapoue.name}}</p>
 			<p>description : {{petiteKapoue.description}}</p>
 			<button type="button" ng-click="getImg()">Kapppppoueeeee</button>
-			  <ul>
-				  <li ng-repeat="image in images">
-					 <img src="{{image.url}}" />
-				  </li>
-			  </ul>
+			<li ng-repeat="image in images">
+				<img ng-src="{{image.url}}" />
+			</li>
 		</div>
+		<div />
+		<form method="post" action="upload" enctype="multipart/form-data">
+			<label for="icone">fichier</label><br />
+			<input type="file" name="icone" id="icone" accept="image/*"/><br />
+			<label for="titre">Titre du fichier (max. 50 caracteres) :</label><br />
+			<input type="text" name="titre" value="Titre du fichier" id="titre" /><br />
+			<label for="description">Description de votre fichier (max. 255 caractères) :</label><br />
+			<textarea name="description" id="description"></textarea><br />
+			<input type="submit" name="submit" value="Envoyer" />
+		</form>
 	</body>
 </html>

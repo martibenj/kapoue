@@ -16,7 +16,7 @@ function Gras($scope, $http)
 	$scope.getImg = function()
 	{
 		console.log ('recuperation de l image');
-		$http.get("./photo/kapoue")
+		$http.get("./photos")
 			.success(
 			function(data)
 			{
