@@ -9,8 +9,8 @@ console.log("#########################################");
 
 // Activating CORS for all
 app.use(function(req, res, next) {
-    express.static(__dirname);
     if (req.headers.origin) {
+        console.log("Adding Access-Control-Allow-Origin");
         res.header('Access-Control-Allow-Origin', '*')
         res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization')
         res.header('Access-Control-Allow-Methods', 'GET,PUT,PATCH,POST,DELETE')
@@ -27,9 +27,10 @@ app.get('/', function(req, res, next){
 // Kapoue 1 with fake objects "name"
 app.get('/kapoue', function(req, res) {
     res.contentType('application/json');
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,PATCH,POST,DELETE');
+    res.status(500);
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization')
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,PATCH,POST,DELETE')
     res.json(
         [
         {"name": "wine1"},
