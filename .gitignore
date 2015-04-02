@@ -4,13 +4,13 @@
 *.war
 *.ear
 *.idea
-.idea/
+*.iml
 .settings/
 .project
 .classpath
 hs_err_pid*
 target/
-bin/
+node_modules/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
