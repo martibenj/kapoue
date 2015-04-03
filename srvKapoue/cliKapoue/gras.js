@@ -1,4 +1,7 @@
-function Gras($scope, $http)
+var myKap = angular.module('myKap',[]);
+
+
+myKap.controller('Gras', ['$scope', '$http', function($scope, $http)
 {
 	$scope.get = function() {
 		console.log('Activation du bouton');
@@ -45,5 +48,5 @@ function Gras($scope, $http)
 			{
 				alert("Erreur lors de la recuperation de l'image");
 			});
-	}
-}
+	};
+}]);

@@ -1,0 +1,12 @@
+{
+"directory": "srvKapoue/cliKapoue/lib",
+"analytics": false,
+"timeout": 120000,
+"registry": {
+"search": [
+"https://bower.herokuapp.com"
+]
+},
+  "proxy":"http://ecprox.bull.fr:80",
+  "https-proxy":"htpps://ecprox.bull.fr:80"
+}

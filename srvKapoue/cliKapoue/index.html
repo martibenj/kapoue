@@ -7,7 +7,7 @@
 	</head>
 
 	<body>
-		<div ng-app ng-controller="Gras">
+		<div ng-app="myKap" ng-controller="Gras">
 		    <button type="button" ng-click="get()">Obtenir donnees</button>
 			<p>nom : {{petiteKapoue.name}}</p>
 			<p>description : {{petiteKapoue.description}}</p>
@@ -20,19 +20,22 @@
 
 			<button type="button" ng-click="getImgs()">Plein de Kapppppoueeeee</button>
 			<li ng-repeat="image in images">
-				<p>Num : {{image.index}}</p>
+				<p>Numero du kapoue : {{image.index}}</p>
 				<img ng-src="{{image.url}}" />
 			</li>
+			<div />
 		</div>
-		<div />
-		<form method="post" action="upload" enctype="multipart/form-data">
-			<label for="icone">fichier</label><br />
-			<input type="file" name="icone" id="icone" accept="image/*"/><br />
-			<label for="titre">Titre du fichier (max. 50 caracteres) :</label><br />
-			<input type="text" name="titre" value="Titre du fichier" id="titre" /><br />
-			<label for="description">Description de votre fichier (max. 255 caractères) :</label><br />
-			<textarea name="description" id="description"></textarea><br />
-			<input type="submit" name="submit" value="Envoyer" />
-		</form>
+		<br/>
+		<div>
+			<form method="post" action="upload" enctype="multipart/form-data">
+				<label for="icone">fichier</label><br />
+				<input type="file" name="icone" id="icone" accept="image/*"/><br />
+				<label for="titre">Titre du fichier (max. 50 caracteres) :</label><br />
+				<input type="text" name="titre" value="Titre du fichier" id="titre" /><br />
+				<label for="description">Description de votre fichier (max. 255 caract&egrave;res) :</label><br />
+				<textarea name="description" id="description"></textarea><br />
+				<input type="submit" name="submit" value="Envoyer" />
+			</form>
+		</div>
 	</body>
 </html>

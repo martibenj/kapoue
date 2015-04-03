@@ -5,6 +5,8 @@
 *.ear
 *.idea
 *.iml
+bower.json
+.bowerrc
 .settings/
 .project
 .classpath
@@ -20,3 +22,4 @@ dependency-reduced-pom.xml
 gen/*
 R.java
 img/*
+srvKapoue/cliKapoue/lib/
