@@ -1,4 +1,4 @@
-var myKap = angular.module('myKap',[]);
+var myKap = angular.module('myKap',['angularFileUpload']);
 
 
 myKap.controller('Gras', ['$scope', '$http', function($scope, $http)
@@ -48,5 +48,19 @@ myKap.controller('Gras', ['$scope', '$http', function($scope, $http)
 			{
 				alert("Erreur lors de la recuperation de l'image");
 			});
+	};
+
+	$scope.uploadFile = function(fichier) {
+		var fd = new FormData();
+		//Take the first selected file
+		console.log(fichier);
+		fd.append("file", fichier);
+
+		$http.post("./upload", fd, {
+			withCredentials: true,
+			headers: {'Content-Type': image/jpeg },
+			transformRequest: angular.identity
+		}).success().error();
+
 	};
 }]);

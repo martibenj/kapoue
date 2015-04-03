@@ -3,11 +3,14 @@
 	<head>
 		<title>Gras AngularJS</title>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
-		<script src="./gras.js"></script>
+		<script src="lib/ng-file-upload/angular-file-upload-shim.js"></script>
+		<script src="lib/ng-file-upload/angular-file-upload.min.js"></script>
+		<script src="lib/ng-file-upload/angular-file-upload.js"></script>
+		<script src="ctr/gras.js"></script>
 	</head>
 
-	<body>
-		<div ng-app="myKap" ng-controller="Gras">
+	<body ng-app="myKap">
+		<div  ng-controller="Gras">
 		    <button type="button" ng-click="get()">Obtenir donnees</button>
 			<p>nom : {{petiteKapoue.name}}</p>
 			<p>description : {{petiteKapoue.description}}</p>
@@ -24,6 +27,7 @@
 				<img ng-src="{{image.url}}" />
 			</li>
 			<div />
+
 		</div>
 		<br/>
 		<div>
