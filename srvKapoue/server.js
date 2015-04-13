@@ -3,6 +3,7 @@ var http = require('http');
 var busboy = require('connect-busboy');
 var fs = require('fs');
 var walk = require('walk');
+var mysql = require('mysql');
 
 var app = express();
 
@@ -10,12 +11,26 @@ console.log("#########################################");
 console.log("Starting Mega Kapoue Mustache Uber Server");
 console.log("#########################################");
 
+var connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '2948',
+    database: 'test'
+});
+
+connection.connect(function (err) {
+    if (!err) {
+        console.log("Database is connected ... \n");
+    } else {
+        console.log("Error connecting database ... \n");
+    }
+});
 
 // ???
 app.use(busboy());
 
 // Activating CORS for all
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     if (req.headers.origin) {
         console.log("Adding Access-Control-Allow-Origin");
         res.header('Access-Control-Allow-Origin', '*');
@@ -35,44 +50,55 @@ var absoluteImgDir = __dirname + imgDir;
 app.use("/images", express.static(absoluteImgDir));
 
 // App /kapoue
-app.get('/kapoue/:id', function(req, res) {
+app.get('/kapoue/:id', function (req, res) {
     console.log("Calling with id=" + req.params.id);
-    res.contentType('application/json');
-    res.json(
-    {
-        "petiteKapoue": {
-            "id": req.params.id,
-            "name": "Elle a vu la boite de mélange à purée",
-            "description": "Et direct ! Elle a fait \"Kapouuuuééééé\" !!"
+
+    var citation;
+    connection.query('SELECT * from citations WHERE id=' + req.params.id, function (err, rows, fields) {
+        connection.end();
+        if (!err) {
+            citation = rows[0].citation
         }
-    }
-    );
+        else {
+            console.log('Error while performing Query.' + err);
+            citation = "";
+        }
+
+        res.contentType('application/json');
+        res.json(
+            {
+                "petiteKapoue": {
+                    "id": req.params.id,
+                    "name": "Elle a vu la boite de mélange à purée",
+                    "description": "Et direct ! Elle a fait \"Kapouuuuééééé\" !!",
+                    "citationbd": citation
+                }
+            }
+        );
+    });
 });
 console.log("Binded App /kapoue/:id");
 
 // Images de Kapoue
-app.get('/photos', function(req, res)
-{
+app.get('/photos', function (req, res) {
     // Recherche des fichiers dans le repertoire img
-    var files   = [];
-    var walker  = walk.walk('./'+imgDir, { followLinks: false });
-    walker.on('file', function(root, stat, next) {
+    var files = [];
+    var walker = walk.walk('./' + imgDir, {followLinks: false});
+    walker.on('file', function (root, stat, next) {
         // Add this file to the list of files
         files.push(stat.name);
         next();
     });
 
-    walker.on('end', function() {
+    walker.on('end', function () {
         // fin du parcours, on créé un objet json et on retourne la reponse
         var jObject = [];
         var i;
-        for(i in files)
-        {
+        for (i in files) {
             var image = {};
             image.url = "./images/" + files[i];
             image.index = i;
             jObject.push(image);
-
         }
         console.log('jObject');
         console.log(jObject);
@@ -88,18 +114,17 @@ console.log("Binded App /photos");
 
 
 // Images de Kapoue
-app.get('/photo/:id', function(req, res)
-{
+app.get('/photo/:id', function (req, res) {
     // recherche des fichiers dans le repertoire img
-    var files   = [];
-    var walker  = walk.walk('./img', { followLinks: false });
-    walker.on('file', function(root, stat, next) {
+    var files = [];
+    var walker = walk.walk('./img', {followLinks: false});
+    walker.on('file', function (root, stat, next) {
         // Add this file to the list of files
         files.push(stat.name);
         next();
     });
 
-    walker.on('end', function() {
+    walker.on('end', function () {
         // fin du parcours, on créea un objet json et on retourne la reponse
         var jObject = [];
         var image = {};
@@ -118,7 +143,7 @@ console.log("Binded App /photos");
 
 
 // upload de fichier par post
-app.post('/upload', function(req, res) {
+app.post('/upload', function (req, res) {
     console.log("appel post");
     var fstream;
     req.pipe(req.busboy);
@@ -133,7 +158,6 @@ app.post('/upload', function(req, res) {
         }
     });
 });
-
 
 
 // Setting value for server

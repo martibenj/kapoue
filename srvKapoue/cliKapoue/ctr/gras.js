@@ -5,7 +5,7 @@ myKap.controller('Gras', ['$scope', '$http', function($scope, $http)
 {
 	$scope.get = function() {
 		console.log('Activation du bouton');
-		$http.get("./kapoue/truc")
+		$http.get("./kapoue/1")
 			.success(
 			function (data) {
 				$scope.petiteKapoue = data.petiteKapoue;

@@ -8,8 +8,8 @@
         "express": "^4.9.4",
         "node-static": "^0.7.6",
         "connect-busboy": "^0.0.2",
-        "fs": "0.0.1",
-        "walk":"2.3.9"
+        "walk":"2.3.9",
+        "mysql": "^2.5.4"
 
     }
 }
