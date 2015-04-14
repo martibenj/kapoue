@@ -6,9 +6,6 @@ var walk = require('walk');
 var mysql = require('mysql');
 var bodyParser = require('body-parser');
 
-var util = require('util');
-
-var inspect = util.inspect;
 var app = express();
 
 // utilisation du parser bodyparser pour des types simples
@@ -37,7 +34,6 @@ connection.connect(function (err) {
         console.log("Error connecting database ... \n");
     }
 });
-
 
 // Activating CORS for all
 app.use(function (req, res, next) {
@@ -90,7 +86,7 @@ app.get('/kapoue/:id', function (req, res) {
 });
 console.log("Binded App /kapoue/:id");
 
-// Images de Kapoue
+// Images de Kapoue parcours le repertoire img
 app.get('/photos', function (req, res) {
     // Recherche des fichiers dans le repertoire img
     var files = [];
@@ -109,6 +105,8 @@ app.get('/photos', function (req, res) {
             var image = {};
             image.url = "./images/" + files[i];
             image.index = i;
+            image.titre = "";
+            image.description = "";
             jObject.push(image);
         }
         console.log('jObject');
@@ -124,25 +122,27 @@ app.get('/photos', function (req, res) {
 console.log("Binded App /photos");
 
 
-// Images de Kapoue
+// Images de Kapoue, va chercher dans la bd la bonne photo
 app.get('/photo/:id', function (req, res) {
-    // recherche des fichiers dans le repertoire img
-    var files = [];
-    var walker = walk.walk('./img', {followLinks: false});
-    walker.on('file', function (root, stat, next) {
-        // Add this file to the list of files
-        files.push(stat.name);
-        next();
-    });
 
-    walker.on('end', function () {
-        // fin du parcours, on créea un objet json et on retourne la reponse
+    var chemin;
+    var titre;
+    var description;
+    var requete = 'SELECT * FROM photo WHERE id=' + req.params.id;
+    connection.query(requete, function (err, rows, fields) {
+        console.log(rows);
         var jObject = [];
         var image = {};
-        image.url = "./images/" + files[req.params.id];
-        image.index = req.params.id;
-        jObject.push(image);
-        // construction de la reponse
+        if (!err) {
+            image.url = rows[0].chemin;
+            image.index = req.params.id;
+            image.titre = rows[0].titre;
+            image.description = rows[0].commentaires;
+            jObject.push(image);
+        }
+        else {
+            console.log('Error while performing Query.' + err);
+        }
         res.contentType('application/json');
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization');
@@ -150,49 +150,61 @@ app.get('/photo/:id', function (req, res) {
         res.json(jObject);
     });
 });
-console.log("Binded App /photos");
+console.log("Binded App /photo/id");
 
 
 // upload de fichier par post
 app.post('/upload', function (req, res) {
     console.log("appel post");
+
     var nomfichier;
     var titre;
     var description;
-
     var fstream;
+
     req.pipe(req.busboy);
+
+    // analyse de la partie fichier
     req.busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
-        console.log('File [' + fieldname + ']: filename: ' + filename + ', encoding: ' + encoding);
+        console.log('fichier [' + fieldname + ']: filename: ' + filename + ', encoding: ' + encoding);
         if (filename) {
             console.log("Upload du fichier: " + filename);
-            nomfichier = './images/' + filename;
-
+            nomfichier = filename;
             fstream = fs.createWriteStream(absoluteImgDir + '/' + filename);
             file.pipe(fstream);
-            fstream.on('close', function () {
-            });
         }
+        else {
+            console.log("pas de fichier a uploader");
+            file.resume();
+        }
+        file.on('end', function (chunk) {
+            console.log('fin de l upload');
+        });
     });
+
+    // analyse de la partie champs
     req.busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {
-        console.log('Field [' + fieldname + ']: value: ' + inspect(val));
         if (fieldname == "titre") {
-            console.log("le titre du fichier est " + inspect(val));
+            console.log("le titre du fichier est " + val);
             titre = val;
         }
         if (fieldname == "description") {
-            console.log("la description du fichier est " + inspect(val));
+            console.log("la description du fichier est " + val);
             description = val;
         }
     });
 
+    // fin de l'analyse, insertion sql
     req.busboy.on('finish', function () {
-        console.log('Done parsing form! Insertion sql');
-        var valeurs  = '("' + nomfichier + '","' + titre + '","' + description + '")';
-        var requete = 'insert into photo (chemin,titre,commentaires) values ' + valeurs;
-        console.log(requete);
-        connection.query(requete);
-
+        console.log('Done parsing form!');
+        if (nomfichier) {
+            console.log('upload du fichier');
+            console.log('Done parsing form! Insertion sql');
+            var valeurs = '("./images/' + nomfichier + '","' + titre + '","' + description + '")';
+            var requete = 'insert into photo (chemin,titre,commentaires) values ' + valeurs;
+            console.log(requete);
+            connection.query(requete);
+        }
         res.writeHead(303, {Connection: 'close', Location: '/'});
         res.end();
     });

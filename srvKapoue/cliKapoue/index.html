@@ -30,9 +30,13 @@
 
     <h1>obtenir plusieurs images</h1>
     <button type="button" ng-click="getImgs()">Plein de Kapppppoueeeee</button>
+
+    <h1>Mais qu'il est beau ce kapoue</h1>
+
     <li ng-repeat="image in images">
-        <p>Numero du kapoue : {{image.index}}</p>
+        <p>{{image.index}}. Titre : {{image.titre}}</p>
         <img ng-src="{{image.url}}" height="50" width="50"/>
+        <p>description : {{image.description}}</p>
     </li>
     <div/>
 </div>
@@ -42,8 +46,8 @@
 
 <div>
     <form method="post" action="/upload" enctype="multipart/form-data">
-        <label for="icone">fichier</label><br/>
-        <input type="file" name="icone" id="icone" accept="image/*"/><br/>
+        <label for="fichier">fichier</label><br/>
+        <input type="file" name="fichier" id="fichier" accept="image/*"/><br/>
         <label for="titre">Titre du fichier (max. 50 caracteres) :</label><br/>
         <input type="text" name="titre" value="Titre du fichier" id="titre"/><br/>
         <label for="description">Description de votre fichier (max. 255 caract&egrave;res) :</label><br/>
@@ -57,7 +61,7 @@
     <form id="loginformA" action="/" method="post">
         <div>
             <label for="email">Email: </label>
-            <input type="text" id="email" name="email" />
+            <input type="text" id="email" name="email"/>
         </div>
         <input type="submit" value="Submit"/>
     </form>
