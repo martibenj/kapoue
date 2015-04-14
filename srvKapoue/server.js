@@ -4,20 +4,32 @@ var busboy = require('connect-busboy');
 var fs = require('fs');
 var walk = require('walk');
 var mysql = require('mysql');
+var bodyParser = require('body-parser');
 
+var util = require('util');
+
+var inspect = util.inspect;
 var app = express();
+
+// utilisation du parser bodyparser pour des types simples
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+// utilisation du parser busboy pour des types complexes
+app.use(busboy({immediate: true}));
 
 console.log("#########################################");
 console.log("Starting Mega Kapoue Mustache Uber Server");
 console.log("#########################################");
 
+// Creation de la connexion a mysql
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '2948',
     database: 'test'
 });
-
 connection.connect(function (err) {
     if (!err) {
         console.log("Database is connected ... \n");
@@ -26,8 +38,6 @@ connection.connect(function (err) {
     }
 });
 
-// ???
-app.use(busboy());
 
 // Activating CORS for all
 app.use(function (req, res, next) {
@@ -55,7 +65,7 @@ app.get('/kapoue/:id', function (req, res) {
 
     var citation;
     connection.query('SELECT * from citations WHERE id=' + req.params.id, function (err, rows, fields) {
-        connection.end();
+
         if (!err) {
             citation = rows[0].citation
         }
@@ -71,11 +81,12 @@ app.get('/kapoue/:id', function (req, res) {
                     "id": req.params.id,
                     "name": "Elle a vu la boite de mélange à purée",
                     "description": "Et direct ! Elle a fait \"Kapouuuuééééé\" !!",
-                    "citationbd": citation
+                    "donnees": citation
                 }
             }
         );
     });
+    connection.end();
 });
 console.log("Binded App /kapoue/:id");
 
@@ -145,20 +156,56 @@ console.log("Binded App /photos");
 // upload de fichier par post
 app.post('/upload', function (req, res) {
     console.log("appel post");
+    var nomfichier;
+    var titre;
+    var description;
+
     var fstream;
     req.pipe(req.busboy);
-    req.busboy.on('file', function (fieldname, file, filename) {
+    req.busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+        console.log('File [' + fieldname + ']: filename: ' + filename + ', encoding: ' + encoding);
         if (filename) {
             console.log("Upload du fichier: " + filename);
+            nomfichier = './images/' + filename;
+
             fstream = fs.createWriteStream(absoluteImgDir + '/' + filename);
             file.pipe(fstream);
             fstream.on('close', function () {
-                res.redirect('http://www.youtube.com/watch?v=oavMtUWDBTM');
             });
         }
     });
+    req.busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {
+        console.log('Field [' + fieldname + ']: value: ' + inspect(val));
+        if (fieldname == "titre") {
+            console.log("le titre du fichier est " + inspect(val));
+            titre = val;
+        }
+        if (fieldname == "description") {
+            console.log("la description du fichier est " + inspect(val));
+            description = val;
+        }
+    });
+
+    req.busboy.on('finish', function () {
+        console.log('Done parsing form! Insertion sql');
+        var valeurs  = '("' + nomfichier + '","' + titre + '","' + description + '")';
+        var requete = 'insert into photo (chemin,titre,commentaires) values ' + valeurs;
+        console.log(requete);
+        connection.query(requete);
+
+        res.writeHead(303, {Connection: 'close', Location: '/'});
+        res.end();
+    });
 });
 
+// upload de fichier par post
+app.post('/', function (req, res) {
+    console.log("appel post racine /");
+    var mail = req.body.email;
+    console.log("mail : " + mail);
+    res.writeHead(303, {Connection: 'close', Location: '/'});
+    res.end();
+});
 
 // Setting value for server
 var srvAddress = "0.0.0.0";
@@ -168,5 +215,5 @@ var srvPort = 3000;
 var server = http.createServer(app).listen(srvPort, srvAddress);
 
 // Displaying server info in node console
-console.log("Server listening on address : %s", srvAddress)
-console.log("Server listening on port : %s", srvPort)
+console.log("Server listening on address : %s", srvAddress);
+console.log("Server listening on port : %s", srvPort);

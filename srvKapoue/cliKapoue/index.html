@@ -1,46 +1,66 @@
 <!doctype html>
 <html>
-	<head>
-		<title>Gras AngularJS</title>
-		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
-		<script src="lib/ng-file-upload/angular-file-upload-shim.js"></script>
-		<script src="lib/ng-file-upload/angular-file-upload.min.js"></script>
-		<script src="lib/ng-file-upload/angular-file-upload.js"></script>
-		<script src="ctr/gras.js"></script>
-	</head>
+<head>
+    <title>Gras AngularJS</title>
+    <link rel="stylesheet" href="kapoue.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+    <script src="lib/ng-file-upload/angular-file-upload-shim.js"></script>
+    <script src="lib/ng-file-upload/angular-file-upload.min.js"></script>
+    <script src="lib/ng-file-upload/angular-file-upload.js"></script>
+    <script src="ctr/gras.js"></script>
+</head>
 
-	<body ng-app="myKap">
-		<div  ng-controller="Gras">
-		    <button type="button" ng-click="get()">Obtenir donnees</button>
-			<p>nom : {{petiteKapoue.name}}</p>
-			<p>description : {{petiteKapoue.description}}</p>
-			<p>citation : {{petiteKapoue.citationbd}}</p>
+<body ng-app="myKap">
+<div ng-controller="Gras">
+    <h1>service rest + acces sql</h1>
+    <button type="button" ng-click="get()">Obtenir donnees</button>
+    <p>nom : {{petiteKapoue.name}}</p>
 
-			<form ng-submit="getImg()">
-				<input type="text" name="firstName" ng-model="index"> Numero du kapoueeee <br/>
+    <p>description : {{petiteKapoue.description}}</p>
 
-				<input type="submit">
-			</form>
+    <p>données : {{petiteKapoue.donnees}}</p>
 
-			<button type="button" ng-click="getImgs()">Plein de Kapppppoueeeee</button>
-			<li ng-repeat="image in images">
-				<p>Numero du kapoue : {{image.index}}</p>
-				<img ng-src="{{image.url}}" />
-			</li>
-			<div />
+    <h1>obtenir une image par un formulaire avec un champ texte</h1>
 
-		</div>
-		<br/>
-		<div>
-			<form method="post" action="upload" enctype="multipart/form-data">
-				<label for="icone">fichier</label><br />
-				<input type="file" name="icone" id="icone" accept="image/*"/><br />
-				<label for="titre">Titre du fichier (max. 50 caracteres) :</label><br />
-				<input type="text" name="titre" value="Titre du fichier" id="titre" /><br />
-				<label for="description">Description de votre fichier (max. 255 caract&egrave;res) :</label><br />
-				<textarea name="description" id="description"></textarea><br />
-				<input type="submit" name="submit" value="Envoyer" />
-			</form>
-		</div>
-	</body>
+    <form ng-submit="getImg()">
+        <input type="text" name="firstName" ng-model="index"> Numero du kapoueeee <br/>
+
+        <input type="submit">
+    </form>
+
+    <h1>obtenir plusieurs images</h1>
+    <button type="button" ng-click="getImgs()">Plein de Kapppppoueeeee</button>
+    <li ng-repeat="image in images">
+        <p>Numero du kapoue : {{image.index}}</p>
+        <img ng-src="{{image.url}}" height="50" width="50"/>
+    </li>
+    <div/>
+</div>
+<br/>
+
+<h1>poster un fichier avec du texte</h1>
+
+<div>
+    <form method="post" action="/upload" enctype="multipart/form-data">
+        <label for="icone">fichier</label><br/>
+        <input type="file" name="icone" id="icone" accept="image/*"/><br/>
+        <label for="titre">Titre du fichier (max. 50 caracteres) :</label><br/>
+        <input type="text" name="titre" value="Titre du fichier" id="titre"/><br/>
+        <label for="description">Description de votre fichier (max. 255 caract&egrave;res) :</label><br/>
+        <textarea name="description" id="description"></textarea><br/>
+        <input type="submit" name="submit" value="Envoyer"/>
+    </form>
+</div>
+<h1>poster un texte</h1>
+
+<div>
+    <form id="loginformA" action="/" method="post">
+        <div>
+            <label for="email">Email: </label>
+            <input type="text" id="email" name="email" />
+        </div>
+        <input type="submit" value="Submit"/>
+    </form>
+</div>
+</body>
 </html>
