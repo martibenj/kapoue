@@ -1,6 +1,6 @@
 var express = require('express');
 var http = require('http');
-var busboy = require('connect-busboy');
+var Busboy = require('busboy');
 var fs = require('fs');
 var walk = require('walk');
 var mysql = require('mysql');
@@ -13,8 +13,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-// utilisation du parser busboy pour des types complexes
-app.use(busboy({immediate: true}));
+
 
 console.log("#########################################");
 console.log("Starting Mega Kapoue Mustache Uber Server");
@@ -193,28 +192,29 @@ app.post('/upload', function (req, res) {
     var description;
     var fstream;
 
-    req.pipe(req.busboy);
+    var busboy =  new Busboy({ headers: req.headers });
 
     // analyse de la partie fichier
-    req.busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+    busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
         console.log('fichier [' + fieldname + ']: filename: ' + filename + ', encoding: ' + encoding);
         if (filename) {
             console.log("Upload du fichier: " + filename);
             nomfichier = filename;
             fstream = fs.createWriteStream(absoluteImgDir + '/' + filename);
             file.pipe(fstream);
+            fstream.on('close', function(){
+                console.log('file ' + filename + ' uploaded');
+            });
         }
         else {
             console.log("pas de fichier a uploader");
             file.resume();
         }
-        file.on('end', function (chunk) {
-            console.log('fin de l upload');
-        });
+
     });
 
     // analyse de la partie champs
-    req.busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {
+    busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {
         if (fieldname == "titre") {
             console.log("le titre du fichier est " + val);
             titre = val;
@@ -226,7 +226,7 @@ app.post('/upload', function (req, res) {
     });
 
     // fin de l'analyse, insertion sql
-    req.busboy.on('finish', function () {
+    busboy.on('finish', function () {
         if (nomfichier) {
             console.log('Done parsing form! Insertion sql');
             var valeurs = '("./images/' + nomfichier + '","' + titre + '","' + description + '")';
@@ -237,6 +237,7 @@ app.post('/upload', function (req, res) {
         res.writeHead(303, {Connection: 'close', Location: '/'});
         res.end();
     });
+    req.pipe(busboy);
 });
 
 // upload de fichier par post
