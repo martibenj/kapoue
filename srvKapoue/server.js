@@ -227,9 +227,7 @@ app.post('/upload', function (req, res) {
 
     // fin de l'analyse, insertion sql
     req.busboy.on('finish', function () {
-        console.log('Done parsing form!');
         if (nomfichier) {
-            console.log('upload du fichier');
             console.log('Done parsing form! Insertion sql');
             var valeurs = '("./images/' + nomfichier + '","' + titre + '","' + description + '")';
             var requete = 'insert into photo (chemin,titre,commentaires) values ' + valeurs;
