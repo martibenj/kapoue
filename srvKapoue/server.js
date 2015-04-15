@@ -82,12 +82,11 @@ app.get('/kapoue/:id', function (req, res) {
             }
         );
     });
-    connection.end();
 });
 console.log("Binded App /kapoue/:id");
 
 // Images de Kapoue parcours le repertoire img
-app.get('/photos', function (req, res) {
+app.get('/repertoireimg', function (req, res) {
     // Recherche des fichiers dans le repertoire img
     var files = [];
     var walker = walk.walk('./' + imgDir, {followLinks: false});
@@ -119,8 +118,40 @@ app.get('/photos', function (req, res) {
         res.json(jObject);
     });
 });
-console.log("Binded App /photos");
+console.log("Binded App /contenuimg");
 
+// Images de Kapoue parcours le repertoire img
+app.get('/photos', function (req, res) {
+    var titre;
+    var description;
+    var requete = 'SELECT * FROM photo ';
+    connection.query(requete, function (err, rows, fields) {
+        console.log(rows);
+        var jObject = [];
+        if (!err) {
+            var i;
+            for (i in rows) {
+                var image = {};
+                image.url = rows[i].chemin;
+                image.index = rows[i].id;
+                image.titre = rows[i].titre;
+                image.description = rows[i].commentaires;
+                jObject.push(image);
+            }
+        }
+        else {
+            console.log('Error while performing Query.' + err);
+        }
+        console.log(jObject);
+        // construction de la reponse
+        res.contentType('application/json');
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization');
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,PATCH,POST,DELETE');
+        res.json(jObject);
+    });
+});
+console.log("Binded App /photos");
 
 // Images de Kapoue, va chercher dans la bd la bonne photo
 app.get('/photo/:id', function (req, res) {

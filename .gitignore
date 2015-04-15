@@ -5,6 +5,7 @@
 *.ear
 *.idea
 *.iml
+*.png
 bower.json
 .bowerrc
 .settings/
@@ -21,5 +22,5 @@ release.properties
 dependency-reduced-pom.xml
 gen/*
 R.java
-img/*
+img/
 srvKapoue/cliKapoue/lib/
