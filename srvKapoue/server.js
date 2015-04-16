@@ -21,9 +21,9 @@ console.log("#########################################");
 
 // Creation de la connexion a mysql
 var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '2948',
+    host: '129.183.116.40',
+    user: 'srv',
+    password: 'srv',
     database: 'test'
 });
 connection.connect(function (err) {
