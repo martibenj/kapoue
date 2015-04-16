@@ -1,70 +1,110 @@
 <!doctype html>
 <html>
 <head>
+    <meta charset="utf-8"/>
+    <meta name="author" content="Script Tutorials"/>
     <title>Gras AngularJS</title>
-    <link rel="stylesheet" href="kapoue.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+
+    <link rel="stylesheet" href="kapoue.css" type="text/css">
+
+    <script src="lib/angular/angular.min.js"></script>
+    <script src="lib/angular/angular.js"></script>
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script src="lib/angular-animate/angular-animate.min.js"></script>
+    <script src="lib/angular-touch/angular-touch.min.js"></script>
+
     <script src="lib/ng-file-upload/angular-file-upload-shim.js"></script>
     <script src="lib/ng-file-upload/angular-file-upload.min.js"></script>
     <script src="lib/ng-file-upload/angular-file-upload.js"></script>
+    <!-- le controlleur -->
     <script src="ctr/gras.js"></script>
 </head>
 
-<body ng-app="myKap">
-<div ng-controller="Gras">
-    <h1>service rest + acces sql</h1>
-    <button type="button" ng-click="get()">Obtenir donnees</button>
-    <p>nom : {{petiteKapoue.name}}</p>
-
-    <p>description : {{petiteKapoue.description}}</p>
-
-    <p>données : {{petiteKapoue.donnees}}</p>
-
-    <h1>obtenir une image par un formulaire avec un champ texte</h1>
-
-    <form ng-submit="getImg()">
-        <input type="text" name="firstName" ng-model="index"> Numero du kapoueeee <br/>
-
-        <input type="submit">
-    </form>
-
-    <h1>obtenir plusieurs images</h1>
-    <button type="button" ng-click="getImgs()">Plein de Kapppppoueeeee</button>
-
-    <h1>Mais qu'il est beau ce kapoue</h1>
-
-    <li ng-repeat="image in images">
-        <p>{{image.index}}. Titre : {{image.titre}}</p>
-        <img ng-src="{{image.url}}" height="50" width="50"/>
-        <p>description : {{image.description}}</p>
-    </li>
-    <div/>
-</div>
-<br/>
-
-<h1>poster un fichier avec du texte</h1>
+<body ng-app="myKap" ng-controller="Gras">
+<h1>Album test</h1>
 
 <div>
-    <form method="post" action="/upload" enctype="multipart/form-data">
-        <label for="fichier">fichier</label><br/>
-        <input type="file" name="fichier" id="fichier" accept="image/*"/><br/>
-        <label for="titre">Titre du fichier (max. 50 caracteres) :</label><br/>
-        <input type="text" name="titre" value="Titre du fichier" id="titre"/><br/>
-        <label for="description">Description de votre fichier (max. 255 caract&egrave;res) :</label><br/>
-        <textarea name="description" id="description"></textarea><br/>
-        <input type="submit" name="submit" value="Envoyer"/>
-    </form>
+    <!-- slider container -->
+    <div class="container slider">
+
+        <!-- enumerate all photos -->
+        <img ng-repeat="photo in images" class="slide" ng-swipe-right="showPrev()" ng-swipe-left="showNext()" ng-show="isActive($index)"
+             ng-src="{{photo.url}}" height="500" width="500"/>
+
+        <!-- prev / next controls -->
+        <a class="arrow prev" href="#" ng-click="showPrev()"></a>
+        <a class="arrow next" href="#" ng-click="showNext()"></a>
+
+        <!-- extra navigation controls -->
+        <ul class="nav">
+            <li ng-repeat="photo in images" ng-class="{'active':isActive($index)}">
+                <img src="{{photo.url}}" alt="{{photo.description}}" title="{{photo.titre}}" ng-click="showPhoto($index);"/>
+            </li>
+        </ul>
+
+    </div>
 </div>
-<h1>poster un texte</h1>
 
 <div>
-    <form id="loginformA" action="/" method="post">
-        <div>
-            <label for="email">Email: </label>
-            <input type="text" id="email" name="email"/>
-        </div>
-        <input type="submit" value="Submit"/>
-    </form>
+    <div>
+        <h1>service rest + acces sql</h1>
+        <button type="button" ng-click="get()">Obtenir donnees</button>
+        <p>nom : {{petiteKapoue.name}}</p>
+
+        <p>description : {{petiteKapoue.description}}</p>
+
+        <p>donnÃ©es : {{petiteKapoue.donnees}}</p>
+
+        <h1>obtenir une image par un formulaire avec un champ texte</h1>
+
+        <form ng-submit="getImg()">
+            <input type="text" name="firstName" ng-model="index"> Numero du kapoueeee <br/>
+
+            <input type="submit">
+        </form>
+
+        <h1>obtenir plusieurs images</h1>
+        <button type="button" ng-click="getImgs()">Plein de Kapppppoueeeee</button>
+
+        <h1>Mais qu'il est beau ce kapoue</h1>
+
+        <li ng-repeat="image in images">
+            <p>{{image.index}}. Titre : {{image.titre}}</p>
+            <img ng-src="{{image.url}}" height="50" width="50"/>
+
+            <p>description : {{image.description}}</p>
+        </li>
+        <div/>
+    </div>
+    <br/>
+
+    <h1>poster un fichier avec du texte</h1>
+
+    <div>
+        <form method="post" action="/upload" enctype="multipart/form-data">
+            <label for="fichier">fichier</label><br/>
+            <input type="file" name="fichier" id="fichier" accept="image/*"/><br/>
+            <label for="titre">Titre du fichier (max. 50 caracteres) :</label><br/>
+            <input type="text" name="titre" value="Titre du fichier" id="titre"/><br/>
+            <label for="description">Description de votre fichier (max. 255 caract&egrave;res) :</label><br/>
+            <textarea name="description" id="description"></textarea><br/>
+            <input type="submit" name="submit" value="Envoyer"/>
+        </form>
+    </div>
+    <h1>poster un texte</h1>
+
+    <div>
+        <form id="loginformA" action="/" method="post">
+            <div>
+                <label for="email">Email: </label>
+                <input type="text" id="email" name="email"/>
+            </div>
+            <input type="submit" value="Submit"/>
+        </form>
+    </div>
 </div>
 </body>
 </html>

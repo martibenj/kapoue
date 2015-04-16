@@ -154,7 +154,6 @@ console.log("Binded App /photos");
 
 // Images de Kapoue, va chercher dans la bd la bonne photo
 app.get('/photo/:id', function (req, res) {
-
     var chemin;
     var titre;
     var description;
@@ -164,11 +163,13 @@ app.get('/photo/:id', function (req, res) {
         var jObject = [];
         var image = {};
         if (!err) {
-            image.url = rows[0].chemin;
-            image.index = req.params.id;
-            image.titre = rows[0].titre;
-            image.description = rows[0].commentaires;
-            jObject.push(image);
+            if (rows[0]) {
+                image.url = rows[0].chemin;
+                image.index = req.params.id;
+                image.titre = rows[0].titre;
+                image.description = rows[0].commentaires;
+                jObject.push(image);
+            }
         }
         else {
             console.log('Error while performing Query.' + err);
@@ -192,7 +193,7 @@ app.post('/upload', function (req, res) {
     var description;
     var fstream;
 
-    var busboy =  new Busboy({ headers: req.headers });
+    var busboy = new Busboy({headers: req.headers});
 
     // analyse de la partie fichier
     busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
@@ -202,7 +203,7 @@ app.post('/upload', function (req, res) {
             nomfichier = filename;
             fstream = fs.createWriteStream(absoluteImgDir + '/' + filename);
             file.pipe(fstream);
-            fstream.on('close', function(){
+            fstream.on('close', function () {
                 console.log('file ' + filename + ' uploaded');
             });
         }
